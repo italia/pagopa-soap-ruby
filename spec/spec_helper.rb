@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
 require "pagoparb"
 
-require 'webmock/rspec'
+require "webmock/rspec"
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|

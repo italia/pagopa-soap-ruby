@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Pagoparb
   class Client
     attr_reader :client

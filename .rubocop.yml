@@ -1,0 +1,22 @@
+require: rubocop-rspec
+
+AllCops:
+  Exclude:
+    - bin/stubs/*
+  TargetRubyVersion: 2.3
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*.rb
+    - pagoparb.gemspec
+Metrics/LineLength:
+  Exclude:
+    - pagoparb.gemspec
+RSpec/NestedGroups:
+  Enabled: false
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
