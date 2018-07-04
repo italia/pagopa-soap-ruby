@@ -1,0 +1,220 @@
+# Pagoparb
+
+Ruby Wrapper for pagoPA SOAP API based on Savon
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'pagoparb'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install pagoparb
+
+## Usage
+
+TODO: Write usage instructions here
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+# Specifiche integrazione RUBY per pagoPA
+
+<img src="https://dm2ue6l6q7ly2.cloudfront.net/wp-content/uploads/2018/03/20092024/pagopa1.png"/>
+
+1. [Premessa](#premessa)
+2. [Analisi Attuativa](#analisi-attuativa)
+3. [Esempi di connessione](#esempi-di-connessione)
+4. [Requisiti del sistema EC](#requisiti-del-sistem-ec)
+5. [Implementazioni Future](#implementazioni-future)
+6. [Ipotesi di integrazione](#ipotesi-di-integrazione)
+6.1. [Wrapper API Ruby](#wrapper-api-ruby)
+6.2. [Engine Rack](#engine-rack)
+7. [Appendice](#appendice)
+
+## Premessa
+Secondo le linee guida emesse dall’**Agenzia per l’Italia Digitale** il **NODO dei pagamenti SPC** (pagoPA) vuole essere il sistema centralizzato di controllo e interoperabilità tra la Pubblica Amministrazione ed i Cittadini.
+
+Il sistema comunica tramite **Web Service SOAP** con un Header di autenticazione e si aspetta un canale TLS con certificati x.509 v3 e che l’EC (Ente Creditore) che effettua le chiamate sia inserito in una white list di IP verificati.
+
+Attraverso l’interfaccia **WISP** (Wizard interattivo di scelta dei PSP - Prestatori di Pagamento) viene demandato al sistema pagoPA l’attuazione delle linee guida in merito ai sistemi di pagamento e alla visualizzazione dei costi aggiuntivi degli stessi, richiedendo l’autenticazione tramite SPID al cittadino e quindi unificando l’UX del processo di pagamento.
+
+```mermaid
+sequenceDiagram
+Customer ->> Portale EC: Login
+Portale EC ->> Customer: Redirect form di login
+Customer ->> Portale EC: Autenticazione OK
+Portale EC ->> Customer: Redirect lista di pagamenti
+Customer ->> pagoPA: Invio richiesta pagamento (carrello RPT)
+pagoPA ->> Customer: Redirect a login SPID tramite interfaccia WISP
+Customer ->> PSP: Accesso tramite SPID a lista dei metodi di pagamento
+PSP ->> Customer: Selezione metodo di pagamento o ricerca tra quelli disponibili
+Customer ->> PSP: Invio pagamento e attesa risposta
+PSP ->> Customer: Risposta esito pagamento (gestione errori p.es timeout/not found in card ...)
+Customer ->> Portale EC: Aggiornamento pagina e recupero info pagamento
+Portale EC ->> Customer: Invio notifica di pagamento (SMS, Email)
+```
+*a. Diagramma pagamento con WISP*
+
+Il Nodo SPC inoltre lavora anche come server di chiamata in quanto anche i metodi normali (bollettino postale, bonifico, etc…) sono controllati e gestiti tramite il suo supporto, di conseguenza l’EC che intende collegarsi al sistema deve predisporre un ambiente anche di ricezione di Request SOAP.
+
+```mermaid
+sequenceDiagram
+Customer ->> PSP: Richiesta pagamento
+PSP ->> pagoPA: Richiesta posizione debitoria
+pagoPA ->> Portale EC: Richiesta lista pagamenti in attesa
+Portale EC ->> pagoPA: Lista avvisi digitali
+pagoPA ->> PSP: Inoltro lista
+PSP ->> Customer: Conferma pagamento in attesa
+Customer ->> PSP: Conferma di pagamento
+PSP ->> pagoPA: Invio conferma di pagamento
+pagoPA ->> PSP: Ricevuta di pagamento
+PSP ->> Customer: Notifica esito pagamento
+pagoPA ->> Portale EC: Invio notifica pagamento
+Portale EC ->> Customer: Notifica digitale di conferma pagamento
+```
+*a. Diagramma pagamento da PSP*
+
+
+## Analisi attuativa
+
+Attualmente un EC ha un sistema proprietario di gestione dati e rendicontazione di conseguenza si possono immaginare due scenari di integrazione:
+-   Integrazione tramite Canale di scambio delle informazioni e dei dati che poi dovranno essere gestiti direttamente nel gestionale del singolo EC
+-   Integrazione tramite Repository dati e quindi tramite sync da EC e successivamente gestore delle comunicazioni tra Cittadino e Pagamento
+
+Il portale EC deve inoltre fornire al cittadino delle alternative al pagamento digitale tramite QRCode o bollettino postale di nuova generazione come da linee guida contenute nel documento [Avviso Analogico](https://www.agid.gov.it/sites/default/files/repository_files/guidatecnica_avvisoanalogico_v2.1_con_alleg.pdf)
+
+In ultima analisi, visto che si vorrebbe lasciare la massima libertà di scelta del metodo di integrazione più ottimale direttamente agli EC si sono scorporati al massimo tutte le componenti richieste per collegarsi a pagoPA cosi da consentirne l’ utilizzo anche in maniera separata.
+
+
+## Esempi di connessione
+
+Viene fornito uno [Startup Kit](https://www.agid.gov.it/it/piattaforme/pagopa/linee-guida-documentazione-tecnica) con cui è possibile visualizzare attraverso il software SOAP UI tutte le chiamate possibili effettuabili da un EC o dal Nodo SPC ed eventualmente scaricando i espositori presenti su GitHub si possono avere i WSDL ed XSD delle relative request sia in ingresso che in uscita.
+
+I WebService attualmente disponibili sono:
+-   **nodoInviaCarrelloRPT**
+-   **nodoInviaAvvisoDigitali**
+-   **nodoChiediElencoFlussiRendicontazione**
+-   **nodoChiediFlussoRendicontazione**
+-   **nodoChiediListaPendentiRPT**
+-   **nodoChiediStatoRPT**
+-   **nodoInviaRichiestaStorno**
+-   **nodoChiediInformativaPSP**
+-   **nodoChiediElencoQuadraturePA**
+-   **nodoChiediQuadraturaPA**
+-   **paaVerificaRPT**
+-   **paaAllegaRPT**
+-   **paaChiudiNumeroAvviso**
+-   **paaChiediAvvisiDigitali**
+-   **paaInviaEsitoStorno**
+
+Come supporto sono stati realizzati degli schemi di integrazione che illustrano i funzionamenti principali del sistema che sono visibili nella rispettiva appendice.
+
+
+## Requisiti del sistema EC
+
+Per poter iniziare ad utilizzare il sistema pagoPA occorre accreditarsi presso lo stesso e condividere un certificato di autenticazione che dovrà poi essere presente negli Header di ogni request in maniera da permettere al portale di verificare l’attendibilità della fonte.
+
+Visti i futuri sviluppi introdotti dall’Agenzia per l’Italia Digitale che vogliono introdurre una sessione permanente tramite il protocollo di autenticazione SPID (SAML 2.0) ogni EC dovrá permettere ai propri utenti (Cittadini) di poter accedere al sistema tramite l’Identità Unica cosi da velocizzare il processo di pagamento implementato tramite WISP.
+
+Tutti i log delle richieste e relative risposte, anche gli errori, dovranno essere archiviati e mantenuti.
+
+
+## Implementazioni future
+
+Dalle linee guida [File Transfer](http://pagopa-docs-specws.readthedocs.io/it/latest/interazione_EC_Nodo.html#interfacce-per-il-servizio-di-file-transfer-sicuro) si legge come in futuro il sistema di comunicazione tramite WebService SOAP sarà ridotto in merito al nuovo standard di comunicazione dati tramite SFTP cosi che le comunicazioni XML (risposte ai Web Service) siano depositate direttamente in un aree dedicata dell’EC che lo ha richiesto.
+
+In preparazione di questa nuova metodologia di comunicazione il WRAPPER API dovrebbe permettere l’archiviazione della risposta anche in maniera non diretta e prevedere la posizione ed il nome del file da utilizzare per poter estrapolare tutte le informazioni necessarie all’EC.
+
+
+## Ipotesi di Integrazione
+
+### Wrapper API Ruby
+
+Si tratta di una gemma che dovrebbe semplificare la gestione delle chiamate e relative risposte tra EC e sistema pagoPA.
+
+Il wrapper dovrebbe gestire tutti i possibili messaggi di errore delle chiamate.
+Il sistema dovrebbe automatizzare tutto il processo tramite WISP consentendo una configurazione rapida e di minimo impatto al sistema esistente.
+
+Si rimanda al documento [Specifiche Attuative](https://pagopa-docs-specws.readthedocs.io/it/latest/index.html) in cui sono illustrati tutti i webservice dispomnibili e il loro funzionamento.
+
+Per quanto riguarda i messaggi di errore si rimanda invece al documento [Errori webservice](http://pagopa-specifichepagamenti.readthedocs.io/it/latest/_docs/Capitolo10.html)
+Per i codici di versamento [Codici versamento, riversamento e rendicontazione](http://pagopa-codici.readthedocs.io/it/latest/)
+
+In sintesi cosa dovrebbe contenere la gemma:
+-   Generatore Header autenticato per inizializzare la request
+-   Validatore delle request e response SOAP
+-   Implementare tutte le request verso pagoPA
+-   Implementare la possibilità di creare degli endpoint per le request da pagoPA
+-   Generatore di IUV (Identificativo Univoco Versamento)
+-   Generatore di QRCode o Barcode
+
+Per la generazione dello IUV devono essere ovviamente inseriti dei parametri di configurazione a livello di sistema in quanto, come da specifiche, deve essere univoco a livello di sistema e deve seguire delle specifiche chiare ().
+
+##### Come dovrebbe funzionare:
+Il sistema dovrebbe contenere il WSDL base attraverso il quale poter effettuare tutte le chiamate e avere le specifiche di riferimento per ognuna di esse.
+
+Deve essere presente un file di configurazione e di seguito un esempio dei parametri necessari:
+-   BASE_URI_PAGOPA
+-   DOMINIO_ID_EC
+-   CODICE_EC
+-   ENDPOINTS
+
+Il sistema dovrebbe inoltre prevedere la possibilità tramite activerecord, di archiviare in DB le response sia delle varie richieste che di quelle generate automaticamente da pagoPA, cosi da avere un log e consentire anche in un secondo momento di poter prendere i dati ed utilizzarli.
+
+Si pensava inoltre di poter prevedere che il modello sia configurabile in maniera tale da permettere di utilizzare una struttura e codice più adeguati al sistema a cui si aggiunge l’ integrazione.
+
+
+### Engine Rack
+
+Si tratta di un sistema completo che dovrebbe operare in supporto al sistema attuale integrato tramite WISP permettendo ad un EC di implementare la procedura completa integrandosi direttamente con i vari PSP supportati.
+
+In questo caso il sistema conterrebbe la gemma precedente ed in più avrebbe la gestione centralizzata di tutto il traffico in uscita ed entrata dal relativo EC.
+
+Come da linee guida dovrebbe inoltre contenere delle viste (di cui sarà possibile fare un override) che permettono la stampa a video di tutti i PSP con il relativo costo aggiuntivo e la gestione dei metodi di pagamento con i relativi redirect di completamento della procedura di pagamento.
+
+In questo modo non servirebbe andare a creare tutto il sistema di controller nell’app principale ma la nuova gemma avrebbe tutte le configurazioni al suo interno comprensive di **ENDPOINT** di chiamata da pagoPA e gestione delle tabelle necessarie al suo corretto funzionamento.
+
+Le tabelle necessarie dovrebbero essere:
+-   **responses** -> memorizza tutte le chiamate in ingresso
+-   **requests** -> memorizza tutte le chiamate in uscita
+
+Inoltre dovrebbe essere possibile indicare al sistema i nomi delle tabelle o dei modelli che gestiscono le pendenze di pagamento e i dati utente cosi da permettere al sistema di prelevare le informazioni necessarie ad effettuare le transazioni.
+
+
+#### Appendice:
+
+```mermaid
+sequenceDiagram
+Customer ->> PSP: Richiesta revoca diretta
+PSP ->> pagoPA: Richiesta revoca pagamento
+pagoPA ->> Portale EC: Inoltro richiesta revoca
+Portale EC ->> Amministrazione EC: Ricezione revoca
+Amministrazione EC -->> Portale EC: Esito revoca
+Portale EC -->> pagoPA: Invito edito revoca
+pagoPA -->> PSP: Inoltro esito revoca
+PSP -->> Customer: Comunicazione a cliente
+```
+*a. Diagramma di revoca da Customer*
+
+```mermaid
+sequenceDiagram
+Customer ->> Amministrazione EC: Richiesta revoca diretta
+Amministrazione EC ->> Portale EC: Invio revoca
+Portale EC ->> pagoPA: Richiesta revoca pagamento
+pagoPA ->> PSP: Inoltro richiesta revoca
+PSP -->> pagoPA: Esito revoca
+pagoPA -->> Portale EC: inoltro esito revoca
+Portale EC -->> Amministrazione EC: Ricezione revoca
+Amministrazione EC -->> Customer: Comunicazione a cliente
+```
+*a. Diagramma di revoca da PSP*
+
