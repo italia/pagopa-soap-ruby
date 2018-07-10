@@ -144,6 +144,8 @@ Il sistema dovrebbe inoltre prevedere la possibilità tramite activerecord, di a
 
 Si pensava inoltre di poter prevedere che il modello sia configurabile in maniera tale da permettere di utilizzare una struttura e codice più adeguati al sistema a cui si aggiunge l’ integrazione.
 
+##### N.B.
+Le chiamate verso i WebService devono prevedere uno User-Agent all'interno degli Header di chiamata altrimenti tornano come status code 302.
 
 ### Engine Rack
 
