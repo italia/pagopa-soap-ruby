@@ -22,6 +22,15 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+For pagoPA you can specify host, endpoint and other setting in a configuration block
+
+  # config/initializers/pagoparb.rb
+  # This is your pagoPA Wrapper setting.
+  Pagoparb::Configurable.configure do |config|
+    config.host = "https://host-nodo-spc/webservices/"
+    config.endpoint = "https://host-nodo-spc/webservices/"
+  end
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
