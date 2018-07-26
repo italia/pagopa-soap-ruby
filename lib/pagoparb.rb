@@ -3,6 +3,18 @@
 require "savon"
 require "pagoparb/version"
 
+require 'pagoparb/core_ext/string'
+
+# Parser
+require 'pagoparb/parser/xml'
+require 'pagoparb/parser/type'
+require 'pagoparb/parser/port_type'
+require 'pagoparb/parser/binding'
+require 'pagoparb/parser/message'
+
+require "pagoparb/dsl"
+require "pagoparb/base"
+
 require "pagoparb/configurable"
 require "pagoparb/client"
 require "pagoparb/error"
