@@ -7,8 +7,8 @@ require "pagoparb/version"
 Gem::Specification.new do |spec|
   spec.name          = "pagoparb"
   spec.version       = Pagoparb::VERSION
-  spec.authors       = ["Cantierecreativo"]
-  spec.email         = ["d.giacomello@cantierecreativo.net"]
+  spec.authors       = ["Damiano Giacomello - CantiereCreativo"]
+  spec.email         = ["giacomello.damiano@gmail.com"]
 
   spec.summary       = %q{Ruby Wrapper for pagoPA SOAP API}
   spec.description   = %q{Ruby Wrapper for pagoPA SOAP API based on Savon}

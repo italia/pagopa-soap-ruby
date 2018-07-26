@@ -11,8 +11,6 @@ group :development do
 end
 
 group :test do
-  gem "rspec", ">= 3.7.0"
-  gem "rubocop", ">= 0.57.2"
   gem "timecop"
   gem "webmock"
 end
