@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pagoparb (0.1.0)
+    pagopa_soap (0.1.0)
       nori (~> 2.6)
       savon (~> 2.12.0)
 
@@ -28,11 +28,11 @@ GEM
     jaro_winkler (1.5.1)
     method_source (0.9.0)
     mini_portile2 (2.3.0)
-    nokogiri (1.8.3)
+    nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     nori (2.6.0)
     parallel (1.12.1)
-    parser (2.5.1.0)
+    parser (2.5.1.2)
       ast (~> 2.4.0)
     powerpack (0.1.2)
     pry (0.11.3)
@@ -91,7 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
-  pagoparb!
+  pagopa_soap!
   pry
   rake (~> 10.0)
   rspec (~> 3.0)

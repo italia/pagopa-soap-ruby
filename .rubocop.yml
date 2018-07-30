@@ -10,10 +10,10 @@ Layout/DotPosition:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*.rb
-    - pagoparb.gemspec
+    - pagopa_soap.gemspec
 Metrics/LineLength:
   Exclude:
-    - pagoparb.gemspec
+    - pagopa_soap.gemspec
 RSpec/NestedGroups:
   Enabled: false
 Style/EmptyMethod:

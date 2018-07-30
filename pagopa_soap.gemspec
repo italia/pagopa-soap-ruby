@@ -2,11 +2,11 @@
 
 lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "pagoparb/version"
+require "pagopa_soap/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "pagoparb"
-  spec.version       = Pagoparb::VERSION
+  spec.name          = "pagopa_soap"
+  spec.version       = PagopaSoap::VERSION
   spec.authors       = ["Damiano Giacomello - CantiereCreativo"]
   spec.email         = ["giacomello.damiano@gmail.com"]
 

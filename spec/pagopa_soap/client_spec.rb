@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe Pagoparb::Client do
+RSpec.describe Pagoparb::Client do
   let(:subject) { Pagoparb::Client.new() }
 
   describe "#operations" do
