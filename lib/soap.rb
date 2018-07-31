@@ -39,29 +39,40 @@ class Soap::Base
   end
 
   def build
-    module_name = Object.const_set(namespace, Module.new)
+    namespace_module = Object.const_set(namespace, Module.new)
     parser.soap_actions.each do |action|
-      build_klass(module_name, action, parser.soap_action(action))
+      build_klass(namespace_module, action, parser.soap_action(action))
     end
     true
   end
 
-  def build_klass(module_const, name, action)
-    klass = Class.new(Soap::Webservice::Client) do
-      
-    end
+  def build_klass(mod, name, action)
+    k_mod = mod.const_set(Soap.to_camelcase(name), Module.new)
+    request_klass = build_custom_klass(k_mod, "Request", name, action[:input])
+    response_klass = build_custom_klass(k_mod, "Response", name, action[:output])
 
-    request_klass = build_custom_klass(module_const, "Request", name, action[:input])
-    response_klass = build_custom_klass(module_const, "Response", name, action[:output])
-
-    module_const.const_set(Soap.to_camelcase("#{name}Client"), klass)
+    klass = Class.new(Soap::Webservice::Client)
+    k_mod.const_set("Client", klass)
   end
 
-  def build_custom_klass(module_const, type_klass, name_klass, action_klass)
+  def build_custom_klass(mod, type_klass, name_klass, action_klass)
     klass = Class.new(Object.const_get("Soap::Webservice::#{type_klass}")) do
-      
+      define_singleton_method :body_attributes do
+        action_klass[:types][:body]
+      end
+
+      define_singleton_method :header_attributes do
+        action_klass[:types][:header]
+      end
     end
-    module_const.const_set(Soap.to_camelcase("#{name_klass}#{type_klass}"), klass)
+
+    mod.const_set("#{type_klass}", klass)
+  end
+
+  def clients
+    parser.soap_actions.map do |action|
+      "#{namespace}::#{Soap.to_camelcase(action)}::Client"
+    end
   end
 
   private

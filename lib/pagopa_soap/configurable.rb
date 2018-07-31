@@ -26,7 +26,7 @@ module PagopaSoap
     attr_accessor :wsdl
 
     def initialize
-      @namespace ||= "Pagopa::Soap"
+      @namespace ||= "PagoPa"
       @wsdl ||= File.expand_path("../../resources/pagopa.wsdl", __dir__)
     end
   end

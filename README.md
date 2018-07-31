@@ -7,7 +7,7 @@ Ruby Wrapper for pagoPA SOAP API based on Savon
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'pagoparb'
+gem 'pagopa_soap'
 ```
 
 And then execute:
@@ -16,18 +16,26 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install pagoparb
+    $ gem install pagopa_soap
 
 ## Usage
 
 TODO: Write usage instructions here
+Initialize the wrapper and generate dynamic class:
+
+```ruby
+base = PagopaSoap::Base.new
+base.build
+```
+
+After this, the system generate new class in according with WSDL definitions
+with namespace PagoPa
 
 For pagoPA you can specify host, endpoint and other setting in a configuration block
 
-    # config/initializers/pagoparb.rb
+    # config/initializers/pagopa_soap.rb
     # This is your pagoPA Wrapper setting.
-    Pagoparb::Configurable.configure do |config|
-      config.host = "https://host-nodo-spc/webservices/"
+    PagopaSoap::Configurable.configure do |config|
       config.endpoint = "https://host-nodo-spc/webservices/"
     end
 

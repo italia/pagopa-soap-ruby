@@ -11,9 +11,9 @@ module PagopaSoap
     end
 
     # API client based on configured options {Configurable}
-    def client
-      return @client if defined?(@client)
-      @client = PagopaSoap::Client.new(options)
+    def build
+      return @build if defined?(@build)
+      @build = PagopaSoap::Base.new(options)
     end
   end
 end

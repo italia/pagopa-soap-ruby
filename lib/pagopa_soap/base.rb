@@ -7,18 +7,25 @@ class PagopaSoap::Base
   attr_reader :namespace
 
   def initialize(options = {})
-    @wsdl = options[:wsdl] || File.expand_path("../../resources/nodo_per_pa.wsdl", __dir__)
-    @namespace = options[:namespace] || "PagoPa"
+    @wsdl = options[:wsdl] || PagopaSoap.config.wsdl
+    @namespace = options[:namespace] || PagopaSoap.config.namespace
 
     validate_wsdl!
   end
 
   def build
-    sbase = Soap::Base.new(wsdl: @wsdl, namespace: @namespace)
-    sbase.build
+    soap_base.build
+  end
+
+  def clients
+    soap_base.clients
   end
 
   private
+
+  def soap_base
+    @soap_base ||= Soap::Base.new(wsdl: wsdl, namespace: namespace)
+  end
 
   def validate_wsdl!
     raise "Error: WSDL is empty" if !@wsdl.instance_of?(String)

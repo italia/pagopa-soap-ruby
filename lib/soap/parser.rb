@@ -4,6 +4,7 @@ module Soap; end
 module Soap::Parser; end
 
 class Soap::Parse
+  COMMON_ATTRIBUTES = %i(input output)
   attr_reader :document
 
   def initialize(document)
@@ -49,16 +50,30 @@ class Soap::Parse
   end
 
   def soap_action(name)
-    Hash[[ :input, :output ].map do |io|
-      [io, {
-        port_type: port_type[name][io],
-        binding: binding[:operations][name][io],
-        types: Hash[message[port_type[name][io][:message].split(":").last][:part].map do |k, part|
-          namespace, params = part.split(":")
-          [k, types[namespace][params]]
-        end]}
-      ]
-    end]
+    Soap::Parse::COMMON_ATTRIBUTES.each.with_object({}) do |common, attrs|
+      attrs[common] = {
+        port_type: port_type[name][common],
+        binding: binding[:operations][name][common],
+        message: message[port_type[name][common][:message].split(":").last],
+        types: extract_types_attribute(name, common)
+      }
+    end
+  end
+
+  def extract_types_attribute(name, io)
+    msg_name = port_type[name][io][:message].split(":").last
+    components = binding[:operations][name][io]
+    ext = {}
+    components.map do |k, v|
+      if v[:part].nil? && v[:parts].nil?
+        namespace, params = message[msg_name][:part].values.first.split(":")
+        ext[k.to_sym] = types[namespace][params][:params]
+      else
+        namespace, params = message[msg_name][:part][v[:part] || v[:parts]].split(":")
+        ext[k.to_sym] = types[namespace][params][:params]
+      end
+    end
+    ext
   end
 
   private
