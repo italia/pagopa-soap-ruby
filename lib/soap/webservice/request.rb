@@ -16,7 +16,8 @@ class Soap::Webservice::Request
 
   def validate_header_attrs!
     return if required_header.empty?
-    raise "Required attributes are missing" if !required_header.empty? && attributes.empty?
+    raise "Required attributes are missing" if !required_header.empty? &&
+      attributes.empty?
     attributes.each_key do |at|
       if !required_header.include?(at)
         raise "Attribute #{at} must be present"
@@ -26,7 +27,8 @@ class Soap::Webservice::Request
 
   def validate_body_attrs!
     return if required_body.empty?
-    raise "Required attributes are missing" if !required_body.empty? && attributes.empty?
+    raise "Required attributes are missing" if !required_body.empty? &&
+      attributes.empty?
     attributes.each_key do |at|
       if !required_body.include?(at)
         raise "Attribute #{at} must be present"
@@ -73,7 +75,10 @@ class Soap::Webservice::Request
 
   def list_header_attrs
     return {} if self.class.header_attributes.nil?
-    self.class.header_attributes.each.with_object({required: [], optional: []}) do |attr, attrs|
+    self.class.header_attributes.each.with_object({
+      required: [],
+      optional: []
+    }) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       if attr[:attributes].empty?
         attrs[:required] << name
@@ -85,7 +90,10 @@ class Soap::Webservice::Request
 
   def list_body_attrs
     return {} if self.class.body_attributes.nil?
-    self.class.body_attributes.each.with_object({required: [], optional: []}) do |attr, attrs|
+    self.class.body_attributes.each.with_object({
+      required: [],
+      optional: []
+    }) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       if attr[:attributes].empty?
         attrs[:required] << name
