@@ -7,7 +7,7 @@ require "pagopa_soap/version"
 Gem::Specification.new do |spec|
   spec.name          = "pagopa_soap"
   spec.version       = PagopaSoap::VERSION
-  spec.authors       = ["Damiano Giacomello - CantiereCreativo"]
+  spec.authors       = ["Damiano Giacomello"]
   spec.email         = ["giacomello.damiano@gmail.com"]
 
   spec.summary       = %q{Ruby Wrapper for pagoPA SOAP API}
@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "gyoku", "~> 1.3.1"
   spec.add_dependency "savon", "~> 2.12.0"
   spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_development_dependency "coveralls", "~> 0"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "rubocop", "0.57.2"
