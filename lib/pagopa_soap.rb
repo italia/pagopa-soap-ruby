@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "pagopa_soap/version"
+require "soap"
 require "pagopa_soap/configurable"
 require "pagopa_soap/base"
 
