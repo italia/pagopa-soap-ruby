@@ -2,8 +2,8 @@
 
 require 'spec_helper'
 
-RSpec.describe Pagoparb do
+RSpec.describe PagopaSoap do
   it "has a version number" do
-    expect(Pagoparb::VERSION).not_to be nil
+    expect(PagopaSoap::VERSION).not_to be nil
   end
 end
