@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Ruby Wrapper for pagoPA SOAP API}
   spec.description   = %q{Ruby Wrapper for pagoPA SOAP API based on Savon}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/italia/pagoparb"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
       "public gem pushes."
   end
 
+  spec.required_ruby_version = ">= 2.3.0"
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files         = Dir.chdir(File.expand_path(__dir__)) do
