@@ -7,7 +7,7 @@ class Soap::Parser::PortType
   attr_accessor :hash
   attr_reader :node
 
-  def initialize(node)
+  def initialize(namespaces, node)
     @node = node
     @hash = {}
   end

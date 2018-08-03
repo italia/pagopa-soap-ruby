@@ -5,7 +5,7 @@ require "soap/string"
 
 # Parser
 require "soap/parser"
-require "soap/parser/type"
+require "soap/parser/types"
 require "soap/parser/port_type"
 require "soap/parser/binding"
 require "soap/parser/message"
@@ -78,6 +78,6 @@ class Soap::Base
   private
 
   def parser
-    @parser ||= Soap::Parse.new(Nokogiri::XML(File.read(wsdl)))
+    @parser ||= Soap::Parse.new(File.read(wsdl))
   end
 end

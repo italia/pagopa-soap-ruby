@@ -3,7 +3,7 @@
 module Soap; end
 module Soap::Parser; end
 
-class Soap::Parser::Type
+class Soap::Parser::Types
   VALIDATION_ATTRIBUTES = %i(nillable default minOccurs maxOccurs)
 
   attr_accessor :hash
@@ -49,7 +49,7 @@ class Soap::Parser::Type
       elem_name = inner.attribute('name').value
       elem_type = inner.attribute('type').value
       elem_attributes =
-        Soap::Parser::Type::VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
+        VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
           value = inner.attribute(attr.to_s)
           attrs[attr] = value.to_s if value
         end
@@ -65,7 +65,7 @@ class Soap::Parser::Type
       elem_name = inner.attribute('name').value
       elem_type = inner.attribute('type').value
       elem_attributes =
-        Soap::Parser::Type::VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
+        VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
           value = inner.attribute(attr.to_s)
           attrs[attr] = value.to_s if value
         end

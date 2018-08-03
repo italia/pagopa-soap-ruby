@@ -5,42 +5,27 @@ module Soap::Parser; end
 
 class Soap::Parse
   COMMON_ATTRIBUTES = %i(input output)
+  DEFAULT_SECTIONS = %w(types message port_type binding)
   attr_reader :document
+  attr_reader :sections
 
-  def initialize(document)
-    @document = document
-    sections
+  def initialize(file)
+    @document = Nokogiri::XML(file)
   end
 
   def namespaces
     @namespaces = @document.namespaces.inject({}) do |memo, (key, value)|
-      memo[key.sub('xmlns:', '')] = value
+      memo[key.sub("xmlns:", "")] = value
       memo
     end
   end
 
-  def types
-    types = Soap::Parser::Type.new(namespaces, section('types'))
-    types.parse
-    types.hash
-  end
-
-  def port_type
-    port_type = Soap::Parser::PortType.new(section('portType'))
-    port_type.parse
-    port_type.hash
-  end
-
-  def binding
-    binding = Soap::Parser::Binding.new(section('binding'))
-    binding.parse
-    binding.hash
-  end
-
-  def message
-    message = Soap::Parser::Message.new(section('message'))
-    message.parse
-    message.hash
+  DEFAULT_SECTIONS.each do |sec|
+    define_method(sec.to_sym) do
+      result = Object.const_get("Soap::Parser::#{Soap.to_camelcase(sec)}").new(namespaces, section(sec))
+      result.parse
+      result.hash
+    end
   end
 
   def soap_actions
@@ -65,28 +50,24 @@ class Soap::Parse
     components = binding[:operations][name][io]
     ext = {}
     components.map do |k, v|
+      component = message[msg_name][:part]
       if v[:part].nil? && v[:parts].nil?
-        namespace, params = message[msg_name][:part].values.first.split(":")
-        ext[k.to_sym] = types[namespace][params][:params]
+        namespace, params = component.values.first.split(":")
       else
-        namespace, params = message[msg_name][:part][v[:part] || v[:parts]].split(":")
-        ext[k.to_sym] = types[namespace][params][:params]
+        namespace, params = component[v[:part] || v[:parts]].split(":")
       end
+      ext[k.to_sym] = types[namespace][params][:params]
     end
     ext
   end
 
-  private
-
   def section(section_name)
-    @sections[section_name] || []
+    sections[section_name] || []
   end
 
   def sections
-    return @sections if @sections
-    @sections = {}
-    @document.root.element_children.each do |node|
-      (@sections[node.name] ||= []) << node
+    @sections ||= @document.root.element_children.each.with_object({}) do |node, attrs|
+      (attrs[Soap.to_snakecase(node.name)] ||= []) << node
     end
   end
 end
