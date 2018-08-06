@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module Pagoparb
+# rubocop:disable all
+module Pagopa
   class Error < StandardError
     attr_reader :fault
 
@@ -10,3 +11,4 @@ module Pagoparb
     end
   end
 end
+# rubocop:enable all

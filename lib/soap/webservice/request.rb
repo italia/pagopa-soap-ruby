@@ -6,6 +6,14 @@ module Soap; end
 module Soap::Webservice; end
 
 class Soap::Webservice::Request
+  class << self
+    protected
+
+    def header_attributes; {} end
+
+    def body_attributes; {} end
+  end
+
   attr_reader :attributes
 
   def initialize(attributes = {})
@@ -16,8 +24,10 @@ class Soap::Webservice::Request
 
   def validate_header_attrs!
     return if required_header.empty?
-    raise "Required attributes are missing" if !required_header.empty? &&
-      attributes.empty?
+    if !required_header.empty? && attributes.empty?
+      raise "Required attributes are missing"
+    end
+
     attributes.each_key do |at|
       if !required_header.include?(at)
         raise "Attribute #{at} must be present"
@@ -27,8 +37,10 @@ class Soap::Webservice::Request
 
   def validate_body_attrs!
     return if required_body.empty?
-    raise "Required attributes are missing" if !required_body.empty? &&
-      attributes.empty?
+    if !required_body.empty? && attributes.empty?
+      raise "Required attributes are missing"
+    end
+
     attributes.each_key do |at|
       if !required_body.include?(at)
         raise "Attribute #{at} must be present"
@@ -55,7 +67,7 @@ class Soap::Webservice::Request
   def to_message
     {
       soap_header: header_params,
-      message: body_params,
+      message: body_params
     }
   end
 
@@ -66,19 +78,14 @@ class Soap::Webservice::Request
     )
   end
 
-  protected
-
-  def self.header_attributes; {} end
-  def self.body_attributes; {} end
-
   private
 
   def list_header_attrs
     return {} if self.class.header_attributes.nil?
-    self.class.header_attributes.each.with_object({
+    self.class.header_attributes.each.with_object(
       required: [],
       optional: []
-    }) do |attr, attrs|
+    ) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       if attr[:attributes].empty?
         attrs[:required] << name
@@ -90,10 +97,10 @@ class Soap::Webservice::Request
 
   def list_body_attrs
     return {} if self.class.body_attributes.nil?
-    self.class.body_attributes.each.with_object({
+    self.class.body_attributes.each.with_object(
       required: [],
       optional: []
-    }) do |attr, attrs|
+    ) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       if attr[:attributes].empty?
         attrs[:required] << name

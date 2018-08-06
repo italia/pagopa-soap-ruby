@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable all
 module Pagoparb
   module Webservice
     class Request
@@ -25,3 +26,4 @@ module Pagoparb
     end
   end
 end
+# rubocop:enable all

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable all
 module Pagoparb
   class Client
     attr_reader :client
@@ -68,3 +69,4 @@ module Pagoparb
     end
   end
 end
+# rubocop:enable all

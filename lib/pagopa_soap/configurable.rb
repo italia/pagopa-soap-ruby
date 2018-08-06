@@ -5,10 +5,7 @@ module PagopaSoap
     # List of configurable keys for {Pagoparb::Client}
     # @return [Array] of option keys
     def keys
-      @keys ||= [
-        :namespace,
-        :wsdl
-      ]
+      @keys ||= %i[namespace wsdl]
     end
 
     def config

@@ -14,8 +14,8 @@ class Soap::Webservice::Client
     @endpoint = endpoint
     @response = response
 
-    @client = Savon.client(
-      {
+    @client =
+      Savon.client(
         endpoint: endpoint,
         convert_request_keys_to: :none,
         pretty_print_xml: true,
@@ -25,8 +25,7 @@ class Soap::Webservice::Client
           "Cache-Control" => "no-cache",
           "Accept-Encoding" => "gzip, deflate"
         }
-      }
-    )
+      )
   end
 
   def send(request)

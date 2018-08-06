@@ -48,14 +48,14 @@ class Soap::Base
 
   def build_klass(mod, name, action)
     k_mod = mod.const_set(Soap.to_camelcase(name), Module.new)
-    request_klass = build_custom_klass(k_mod, "Request", name, action[:input])
-    response_klass = build_custom_klass(k_mod, "Response", name, action[:output])
+    build_custom_klass(k_mod, "Request", action[:input])
+    build_custom_klass(k_mod, "Response", action[:output])
 
     klass = Class.new(Soap::Webservice::Client)
     k_mod.const_set("Client", klass)
   end
 
-  def build_custom_klass(mod, type_klass, name_klass, action_klass)
+  def build_custom_klass(mod, type_klass, action_klass)
     klass = Class.new(Object.const_get("Soap::Webservice::#{type_klass}")) do
       define_singleton_method :body_attributes do
         action_klass[:types][:body]
@@ -66,7 +66,7 @@ class Soap::Base
       end
     end
 
-    mod.const_set("#{type_klass}", klass)
+    mod.const_set(type_klass.to_s, klass)
   end
 
   def clients

@@ -7,7 +7,7 @@ class Soap::Parser::Message
   attr_accessor :hash
   attr_reader :node
 
-  def initialize(namespaces, node)
+  def initialize(_namespaces, node)
     @node = node
     @hash = {}
   end
@@ -18,8 +18,8 @@ class Soap::Parser::Message
 
   def parse_message
     @hash = Hash[@node.map do |node|
-      [node['name'], Hash[:part, Hash[node.element_children.map do |mec|
-        [mec['name'], mec.attribute('element').value]
+      [node["name"], Hash[:part, Hash[node.element_children.map do |mec|
+        [mec["name"], mec.attribute("element").value]
       end
       ]]]
     end]

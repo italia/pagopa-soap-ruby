@@ -3,32 +3,31 @@
 require "spec_helper"
 
 RSpec.describe Soap::Parser::PortType do
-  context 'with: generic.wsdl' do
-    let(:xml) { fixture(:generic).read }
-
-    subject do
+  context "with generic.wsdl" do
+    subject(:port_type) do
       parser = Soap::Parse.new(xml)
-      port_type = Soap::Parser::PortType.new(parser.namespaces, parser.section("port_type"))
+      port_type = described_class.new(
+        parser.namespaces,
+        parser.section("port_type")
+      )
       port_type.parse
       port_type
     end
 
+    let(:xml) { fixture(:generic).read }
+
     it "has hash with list of soap operations" do
-      expect(subject.hash.class).to eq(Hash)
-      expect(subject.hash).to include("nodoChiediStatoRPT")
+      expect(port_type.hash).to include("nodoChiediStatoRPT")
     end
 
     it "the keys of hash, are the soap actions" do
-      expect(subject.hash.keys).to include("nodoChiediStatoRPT")
-      expect(subject.hash.keys).to include("nodoInviaRPT")
-      expect(subject.hash.keys).not_to include("nodoChiediCopiaRT")
+      expect(port_type.hash.keys).to match_array(
+        %w[nodoChiediStatoRPT nodoInviaRPT]
+      )
     end
 
     it "each operation present input and output hash" do
-      expect(subject.hash["nodoInviaRPT"]).to include(:input)
-      expect(subject.hash["nodoInviaRPT"]).to include(:output)
-      expect(subject.hash["nodoInviaRPT"][:input]).to include(:action)
-      expect(subject.hash["nodoInviaRPT"][:input]).to include(:message)
+      expect(port_type.hash["nodoInviaRPT"]).to include(:input, :output)
     end
   end
 end

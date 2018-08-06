@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SpecSupport
   class Fixture
     def self.[](name)

@@ -4,10 +4,9 @@ module Soap; end
 module Soap::Parser; end
 
 class Soap::Parse
-  COMMON_ATTRIBUTES = %i(input output)
-  DEFAULT_SECTIONS = %w(types message port_type binding)
+  COMMON_ATTRIBUTES = %i[input output].freeze
+  DEFAULT_SECTIONS = %w[types message port_type binding].freeze
   attr_reader :document
-  attr_reader :sections
 
   def initialize(file)
     @document = Nokogiri::XML(file)
@@ -22,9 +21,10 @@ class Soap::Parse
 
   DEFAULT_SECTIONS.each do |sec|
     define_method(sec.to_sym) do
-      result = Object.const_get("Soap::Parser::#{Soap.to_camelcase(sec)}").new(namespaces, section(sec))
-      result.parse
-      result.hash
+      sec_klass = Object.const_get("Soap::Parser::#{Soap.to_camelcase(sec)}")
+      sec_result = sec_klass.new(namespaces, section(sec))
+      sec_result.parse
+      sec_result.hash
     end
   end
 
@@ -66,8 +66,9 @@ class Soap::Parse
   end
 
   def sections
-    @sections ||= @document.root.element_children.each.with_object({}) do |node, attrs|
-      (attrs[Soap.to_snakecase(node.name)] ||= []) << node
-    end
+    @sections ||=
+      @document.root.element_children.each.with_object({}) do |node, attrs|
+        (attrs[Soap.to_snakecase(node.name)] ||= []) << node
+      end
   end
 end

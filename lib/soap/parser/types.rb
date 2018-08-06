@@ -4,7 +4,7 @@ module Soap; end
 module Soap::Parser; end
 
 class Soap::Parser::Types
-  VALIDATION_ATTRIBUTES = %i(nillable default minOccurs maxOccurs)
+  VALIDATION_ATTRIBUTES = %i[nillable default minOccurs maxOccurs].freeze
 
   attr_accessor :hash
   attr_reader :node
@@ -26,28 +26,29 @@ class Soap::Parser::Types
       @hash[namespace] = {}
       schema.element_children.each do |node|
         case node.name
-          when "element"
-            if !node.children.empty?
-              node_type = node.at_xpath('./xsd:complexType')
-              @hash[namespace].merge!(parse_type(node_type, node['name']))
-            end
-          when "complexType"
-            @hash[namespace].merge!(parse_type(node, node['name']))
+        when "element"
+          if !node.children.empty?
+            node_type = node.at_xpath("./xsd:complexType")
+            @hash[namespace].merge!(parse_type(node_type, node["name"]))
+          end
+        when "complexType"
+          @hash[namespace].merge!(parse_type(node, node["name"]))
         end
       end
     end
   end
 
   def simple_type
-    {'base' => @node.at_xpath('./xs|xsd:restriction')['base']}
+    { "base" => @node.at_xpath("./xs|xsd:restriction")["base"] }
   end
 
+  # rubocop:disable all
   def parse_type(node, name)
     element = {}
-    element[name] ||= {:params => []}
-    node.xpath('./xsd:complexContent/xsd:extension/xsd:sequence/xsd:element').each do |inner|
-      elem_name = inner.attribute('name').value
-      elem_type = inner.attribute('type').value
+    element[name] ||= { params: [] }
+    node.xpath("./xsd:complexContent/xsd:extension/xsd:sequence/xsd:element").each do |inner|
+      elem_name = inner.attribute("name").value
+      elem_type = inner.attribute("type").value
       elem_attributes =
         VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
           value = inner.attribute(attr.to_s)
@@ -61,9 +62,9 @@ class Soap::Parser::Types
       }
     end
 
-    node.xpath('./xsd:sequence/xsd:element').each do |inner|
-      elem_name = inner.attribute('name').value
-      elem_type = inner.attribute('type').value
+    node.xpath("./xsd:sequence/xsd:element").each do |inner|
+      elem_name = inner.attribute("name").value
+      elem_type = inner.attribute("type").value
       elem_attributes =
         VALIDATION_ATTRIBUTES.each.with_object({}) do |attr, attrs|
           value = inner.attribute(attr.to_s)
@@ -79,6 +80,7 @@ class Soap::Parser::Types
 
     element
   end
+  # rubocop:enable all
 
   private
 

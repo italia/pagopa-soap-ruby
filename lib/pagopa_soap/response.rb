@@ -2,6 +2,7 @@
 
 require "base64"
 
+# rubocop:disable all
 module Pagoparb
   class Response
     attr_reader :reponse
@@ -37,3 +38,4 @@ module Pagoparb
     end
   end
 end
+# rubocop:enable all

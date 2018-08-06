@@ -3,42 +3,53 @@
 require "spec_helper"
 
 RSpec.describe Soap::Parser::Binding do
-  context 'with: generic.wsdl' do
-    let(:xml) { fixture(:generic).read }
-
-    subject do
+  context "with generic.wsdl" do
+    subject(:binding) do
       parser = Soap::Parse.new(xml)
-      binding = Soap::Parser::Binding.new(parser.namespaces, parser.section("binding"))
+      binding = described_class.new(
+        parser.namespaces,
+        parser.section("binding")
+      )
       binding.parse
       binding
     end
 
+    let(:xml) { fixture(:generic).read }
+
     it "has hash with name" do
-      expect(subject.hash).to include(:name)
+      expect(binding.hash).to include(:name)
     end
 
     it "has a list of operations" do
-      expect(subject.hash).to include(:operations)
-      expect(subject.hash[:operations].class).to eq(Hash)
-      expect(subject.hash[:operations]).to include("nodoInviaRPT")
+      expect(binding.hash).to include(:operations)
+    end
+
+    it "each keys of operations is the action name" do
+      expect(binding.hash[:operations]).to include("nodoInviaRPT")
     end
 
     it "each operation has input and output" do
-      expect(subject.hash[:operations]["nodoChiediStatoRPT"]).to include(:input)
-      expect(subject.hash[:operations]["nodoChiediStatoRPT"]).to include(:output)
+      expect(
+        binding.hash[:operations]["nodoChiediStatoRPT"]
+      ).to include(:input, :output)
     end
 
-    it "if the WSDL input operation node has one part, this is insert directly" do
-      expect(subject.hash[:operations]["nodoChiediStatoRPT"][:input]).to include("body")
-      expect(subject.hash[:operations]["nodoChiediStatoRPT"][:input]["body"]).to include(name: "nodoChiediStatoRPT")
+    it "input operation with one part" do
+      expect(
+        binding.hash[:operations]["nodoChiediStatoRPT"][:input]["body"]
+      ).to include(name: "nodoChiediStatoRPT")
     end
 
-    it "if the WSDL input operation node has header and body part, these are separate and include part and message directive" do
-      expect(subject.hash[:operations]["nodoInviaRPT"][:input]).to include("body")
-      expect(subject.hash[:operations]["nodoInviaRPT"][:input]).to include("header")
-      expect(subject.hash[:operations]["nodoInviaRPT"][:input]["header"]).to include(:part)
-      expect(subject.hash[:operations]["nodoInviaRPT"][:input]["header"]).to include(:message)
-      expect(subject.hash[:operations]["nodoInviaRPT"][:input]["body"]).to include(:parts)
+    it "header input part include part and message directive" do
+      expect(
+        binding.hash[:operations]["nodoInviaRPT"][:input]["header"]
+      ).to include(:part, :message)
+    end
+
+    it "body input part include parts and name directive" do
+      expect(
+        binding.hash[:operations]["nodoInviaRPT"][:input]["body"]
+      ).to include(:parts, :name)
     end
   end
 end

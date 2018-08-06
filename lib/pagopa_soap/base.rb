@@ -30,6 +30,5 @@ class PagopaSoap::Base
   def validate_wsdl!
     raise "Error: WSDL is empty" if !@wsdl.instance_of?(String)
     raise "Error: File not exists" if !File.exists?(@wsdl)
-    return
   end
 end

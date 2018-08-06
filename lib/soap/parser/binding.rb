@@ -4,11 +4,11 @@ module Soap; end
 module Soap::Parser; end
 
 class Soap::Parser::Binding
-  COMPONENT_ATTRIBUTES = %i(part parts message)
+  COMPONENT_ATTRIBUTES = %i[part parts message].freeze
   attr_accessor :hash
   attr_reader :node
 
-  def initialize(namespaces, node)
+  def initialize(_namespaces, node)
     @node = node
     @hash = {}
   end
@@ -24,9 +24,9 @@ class Soap::Parser::Binding
     @hash[:name] = binding_node["name"]
     @hash[:type] = binding_node["type"]
     operations = Hash[binding_node.xpath("./wsdl:operation").map do |operation|
-      [operation['name'], {
-        input: parse_input_output(operation, 'input'),
-        output: parse_input_output(operation, 'output')
+      [operation["name"], {
+        input: parse_input_output(operation, "input"),
+        output: parse_input_output(operation, "output")
       }]
     end]
     @hash[:operations] = operations
@@ -41,12 +41,12 @@ class Soap::Parser::Binding
   end
 
   def parse_attribute(node)
-    attributes = 
+    attributes =
       COMPONENT_ATTRIBUTES.each.with_object({}) do |attr, attrs|
         value = node.attribute(attr.to_s)
         attrs[attr] = value.to_s if value
       end
-    attributes[:name] = node.parent['name']
+    attributes[:name] = node.parent["name"]
 
     attributes
   end
