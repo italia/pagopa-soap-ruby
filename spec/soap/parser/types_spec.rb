@@ -15,17 +15,17 @@ RSpec.describe Soap::Parser::Types do
     end
 
     let(:xml) { fixture(:generic).read }
+    let(:children) { types.node.first.element_children }
+    let(:schema) { children.first }
 
     it "has at least one node children" do
       expect(types.node.first.element_children.count).to be >= 1
     end
 
-    let(:children) { types.node.first.element_children }
     it "node children are schema" do
       expect(children.map(&:name)).to include("schema")
     end
 
-    let(:schema) { children.first }
     it "each schema has a targetNamespace" do
       expect(schema["targetNamespace"]).to eq(
         "http://ws.pagamenti.telematici.gov/ppthead"
