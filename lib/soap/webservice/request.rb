@@ -7,8 +7,6 @@ module Soap::Webservice; end
 
 class Soap::Webservice::Request
   class << self
-    protected
-
     def header_attributes; {} end
 
     def body_attributes; {} end
@@ -74,7 +72,7 @@ class Soap::Webservice::Request
   def to_xml
     Gyoku.xml(
       to_message,
-      key_converter: lambda { |key| key.camelize(:lower) }
+      key_converter: lambda { |key| Soap.to_camelcase(key) }
     )
   end
 
