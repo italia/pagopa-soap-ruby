@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "gyoku"
-
 module Soap; end
 module Soap::Webservice; end
 
@@ -23,30 +21,27 @@ class Soap::Webservice::Request
   def validate_header_attrs!
     return if required_header.empty?
     if !required_header.empty? && attributes.empty?
-      raise "Required attributes are missing"
+      raise "Required attributes are missing: #{required_header}"
     end
 
-    attributes.each_key do |at|
-      if !required_header.include?(at)
-        raise "Attribute #{at} must be present"
-      end
+    if !(required_header - attributes.keys).empty?
+      raise "Attribute #{required_header - attributes.keys} must be present"
     end
   end
 
   def validate_body_attrs!
     return if required_body.empty?
     if !required_body.empty? && attributes.empty?
-      raise "Required attributes are missing"
+      raise "Required attributes are missing: #{required_body}"
     end
 
-    attributes.each_key do |at|
-      if !required_body.include?(at)
-        raise "Attribute #{at} must be present"
-      end
+    if !(required_body - attributes.keys).empty?
+      raise "Attribute #{required_body - attributes.keys} must be present"
     end
   end
 
   def body_params
+    return {} if self.class.body_attributes.nil?
     self.class.body_attributes.each.with_object({}) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       value = attributes[name]
@@ -55,6 +50,7 @@ class Soap::Webservice::Request
   end
 
   def header_params
+    return {} if self.class.header_attributes.nil?
     self.class.header_attributes.each.with_object({}) do |attr, attrs|
       name = Soap.to_snakecase(attr[:name]).to_sym
       value = attributes[name]

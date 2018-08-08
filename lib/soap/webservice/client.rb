@@ -6,17 +6,25 @@ module Soap; end
 module Soap::Webservice; end
 
 class Soap::Webservice::Client
-  attr_reader :endpoint
-  attr_accessor :response
+  class << self
+    def namespace; end
+    def action; end
+
+    def endpoint
+      "#{namespace}#{action}"
+    end
+  end
+
+  attr_reader :request
   attr_reader :client
 
-  def initialize(endpoint:, response:)
-    @endpoint = endpoint
-    @response = response
+  def initialize(request)
+    @request = request
 
     @client =
       Savon.client(
-        endpoint: endpoint,
+        endpoint: self.class.endpoint,
+        namespace: self.class.namespace,
         convert_request_keys_to: :none,
         pretty_print_xml: true,
         follow_redirects: true,
@@ -28,7 +36,9 @@ class Soap::Webservice::Client
       )
   end
 
-  def send(request)
-    response.new(client.call(endpoint, request.to_message))
+  def send
+    response.new(
+      client.call(Soap.to_snakecase(self.class.action), request.to_message)
+    )
   end
 end

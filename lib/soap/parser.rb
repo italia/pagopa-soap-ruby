@@ -5,7 +5,7 @@ module Soap::Parser; end
 
 class Soap::Parse
   COMMON_ATTRIBUTES = %i[input output].freeze
-  DEFAULT_SECTIONS = %w[types message port_type binding].freeze
+  DEFAULT_SECTIONS = %w[types message port_type binding service].freeze
   attr_reader :document
 
   def initialize(file)

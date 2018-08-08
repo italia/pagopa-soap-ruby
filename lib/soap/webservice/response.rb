@@ -5,47 +5,60 @@ module Soap::Webservice; end
 
 class Soap::Webservice::Response
   class << self
-    protected
-
     def header_attributes; {} end
 
     def body_attributes; {} end
   end
 
   attr_reader :response
+  attr_reader :errors
 
   def initialize(response)
     @response = response
+    @errors = []
+
+    validate_errors!
     validate_body_attrs!
   end
+
+  # rubocop:disable all
+  def validate_errors!
+    case response.http.code
+    when 200
+      errors << Soap::Webservice::FaultError.new(response)
+    when 500
+      errors << Soap::Webservice::Error.new(response)
+    else
+      errors << Soap::Webservice::GenericError.new(response)
+    end
+  end
+  # rubocop:enable all
 
   def validate_body_attrs!
     return if required_body.empty?
     if !required_body.empty? && attributes.empty?
-      raise "Required attributes are missing"
+      raise "Required attributes are missing #{required_body}"
     end
 
-    attributes.each_key do |at|
-      if !required_body.include?(at)
-        raise "Attribute #{at} must be present"
-      end
+    if !(required_body - attributes.keys).empty?
+      raise "Attribute #{required_body - attributes.keys} must be present"
     end
   end
 
   def header
-    @response.header
+    response.header
   end
 
   def body
-    @response.body
+    response.body
   end
 
   def decoded_body
-    @response.body.to_hash.fetch
+    response.body
   end
 
   def to_xml
-    @response.to_xml
+    response.to_xml
   end
 
   private
