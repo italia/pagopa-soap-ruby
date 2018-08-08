@@ -236,7 +236,7 @@
 	</wsdl:binding>
 	<wsdl:service name="PagamentiTelematiciRPTservice">
 		<wsdl:port name="PagamentiTelematiciRPTPort" binding="tns:PagamentiTelematiciRPTbinding">
-			<soap:address location="http://NodoPagamentiSPC.spcoop.gov.it/" />
+			<soap:address location="http://simpagopa.agid.gov.it/area_test?op=" />
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
