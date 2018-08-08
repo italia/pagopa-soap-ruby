@@ -17,8 +17,16 @@ class PagopaSoap::Base
     soap_base.build
   end
 
+  def requests
+    soap_base.request
+  end
+
   def clients
-    soap_base.clients
+    soap_base.client
+  end
+
+  def responses
+    soap_base.response
   end
 
   private
