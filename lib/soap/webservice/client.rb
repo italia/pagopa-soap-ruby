@@ -7,8 +7,9 @@ module Soap::Webservice; end
 
 class Soap::Webservice::Client
   class << self
-    def namespace; end
-    def action; end
+    def namespace; ""; end
+
+    def action; ""; end
 
     def endpoint
       "#{namespace}#{action}"

@@ -9,11 +9,11 @@ RSpec.describe Soap::Webservice::Client do
     end
 
     it "has nil namespace" do
-      expect(described_class.namespace).to be_nil
+      expect(described_class.namespace).to eq("")
     end
 
     it "has nil action" do
-      expect(described_class.action).to be_nil
+      expect(described_class.action).to eq("")
     end
   end
 end

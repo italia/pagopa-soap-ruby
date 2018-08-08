@@ -9,7 +9,7 @@ RSpec.describe Soap::Webservice::Response do
     end
 
     it "has a body_attributes empty" do
-      expect(described_class.body_attributes).to be {}
+      expect(described_class.body_attributes).to eq({})
     end
   end
 end
