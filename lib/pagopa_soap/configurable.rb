@@ -5,7 +5,9 @@ module PagopaSoap
     # List of configurable keys for {Pagoparb::Client}
     # @return [Array] of option keys
     def keys
-      @keys ||= %i[namespace wsdl]
+      @keys ||= %i[
+        namespace wsdl_base wsdl_notify endpoint_base endpoint_notify
+      ]
     end
 
     def config
@@ -20,11 +22,17 @@ module PagopaSoap
 
   class Configurable
     attr_accessor :namespace
-    attr_accessor :wsdl
+    attr_accessor :wsdl_base
+    attr_accessor :wsdl_notify
+    attr_accessor :endpoint_base
+    attr_accessor :endpoint_notify
 
     def initialize
       @namespace ||= "PagoPa"
-      @wsdl ||= File.expand_path("../../resources/pagopa.wsdl", __dir__)
+      @wsdl_base ||=
+        File.expand_path("../../resources/pagopa_base.wsdl", __dir__)
+      @wsdl_notify ||=
+        File.expand_path("../../resources/pagopa_avvisi.wsdl", __dir__)
     end
   end
 end
