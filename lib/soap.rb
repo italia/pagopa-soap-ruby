@@ -44,21 +44,28 @@ class Soap::Base
   SUB_CLASSES = %i[request client response].freeze
   attr_reader :wsdl
   attr_reader :namespace
+  attr_reader :endpoint
 
-  def initialize(wsdl:, namespace:)
+  def initialize(wsdl:, namespace:, endpoint: nil)
     @wsdl = wsdl
     @namespace = namespace
+    @endpoint = endpoint
   end
 
   def build
-    namespace_module = Object.const_set(namespace, Module.new)
+    ns_module =
+      if Object.const_defined?(namespace)
+        Object.const_get(namespace)
+      else
+        Object.const_set(namespace, Module.new)
+      end
     parser.soap_actions.each do |action|
-      build_klass(namespace_module, action, parser.soap_action(action))
+      build_klass(ns_module, action, parser.soap_action(action), endpoint)
     end
     true
   end
 
-  def build_klass(mod, name, action)
+  def build_klass(mod, name, action, endpoint)
     service_name = parser.service[:base_endpoint]
     k_mod = mod.const_set(Soap.to_camelcase(name), Module.new)
     build_custom_klass(k_mod, "Request", action[:input])
@@ -66,7 +73,11 @@ class Soap::Base
 
     klass = Class.new(Soap::Webservice::Client) do
       define_singleton_method :namespace do
-        service_name
+        if !endpoint.blank?
+          endpoint
+        else
+          service_name
+        end
       end
 
       define_singleton_method :action do

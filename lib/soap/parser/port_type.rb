@@ -34,9 +34,9 @@ class Soap::Parser::PortType
   def parse_input_or_output(node, type)
     node_type = node.element_children.find { |n| n.name == type }
     {
-      name: node_type.attribute("name").value,
-      message: node_type.attribute("message").value,
-      action: node_type.attribute("Action").value
+      name: node_type.attribute("message").to_s.split(":").last,
+      message: node_type.attribute("message").to_s,
+      action: node_type.attribute("Action").to_s
     }
   end
 end
