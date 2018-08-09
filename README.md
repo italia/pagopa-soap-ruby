@@ -39,13 +39,37 @@ base.build
 After this, the system generate new class in according with WSDL definitions
 with namespace PagoPa
 
-For pagoPA you can specify host, endpoint and other setting in a configuration block
+```ruby
+PagoPa::NodoChiediStatoRpt
+PagoPa::NodoChiediListaPendentiRpt
+PagoPa::NodoInviaRpt
+PagoPa::NodoInviaCarrelloRpt
+PagoPa::NodoChiediCopiaRt
+PagoPa::NodoChiediInformativaPsp
+PagoPa::NodoPaChiediInformativaPa
+PagoPa::NodoChiediElencoQuadraturePa
+PagoPa::NodoChiediQuadraturaPa
+PagoPa::NodoChiediElencoFlussiRendicontazione
+PagoPa::NodoChiediFlussoRendicontazione
+PagoPa::NodoInviaRichiestaStorno
+PagoPa::NodoInviaRispostaRevoca
+PagoPa::NodoChiediSceltaWisp
+PagoPa::NodoInviaAvvisoDigitale
+```
 
-    # config/initializers/pagopa_soap.rb
-    # This is your pagoPA Wrapper setting.
-    PagopaSoap::Configurable.configure do |config|
-      config.endpoint = "https://host-nodo-spc/webservices/"
-    end
+For pagoPA you can specify WSDL, endpoint and namespace in a configuration block
+
+```ruby
+# config/initializers/pagopa_soap.rb
+# This is your pagoPA Wrapper setting.
+PagopaSoap::Configurable.configure do |config|
+  config.namespace = "PagoPa"
+  config.wsdl_base = "WSDL with webservice specification"
+  config.wsdl_notify = "WSDL with webservice for PUSH notification"
+  config.endpoint_base = "https://host-nodo-spc/webservices/"
+  config.endpoint_notify = "https://host-nodo-spc-push/webservices/"
+end
+```
 
 ## License
 
