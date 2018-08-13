@@ -15,7 +15,7 @@ SimpleCov.start do
 end
 
 require "bundler/setup"
-require "pagopa_soap"
+require "pago_pa"
 require "pry"
 
 support_files = File.expand_path("spec/support/**/*.rb")

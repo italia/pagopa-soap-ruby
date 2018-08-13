@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require "pagopa_soap/message/domain"
-require "pagopa_soap/message/payer"
-require "pagopa_soap/message/institution"
-require "pagopa_soap/message/payment"
+require "pago_pa/soap/message/domain"
+require "pago_pa/soap/message/payer"
+require "pago_pa/soap/message/institution"
+require "pago_pa/soap/message/payment"
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::Rpt
+class PagoPA::SOAP::Message::Rpt
   class << self
     def decode(string)
       nori = Nori.new(
@@ -64,23 +64,23 @@ class PagopaSoap::Message::Rpt
   private
 
   def domain
-    @domain ||= PagoSoap::Message::Domain.new(attributes[:dominio]).perform!
+    @domain ||= PagoPA::SOAP::Message::Domain.new(attributes[:dominio]).perform!
   end
 
   def payer
     @payer ||=
-      PagoSoap::Message::Payer.new(attributes[:soggetto_pagatore]).perform!
+      PagoPA::SOAP::Message::Payer.new(attributes[:soggetto_pagatore]).perform!
   end
 
   def institution
     @institution ||=
-      PagoSoap::Message::Institution.new(
+      PagoPA::SOAP::Message::Institution.new(
         attributes[:ente_beneficiario]
       ).perform!
   end
 
   def payment
     @payment ||=
-      PagoSoap::Message::Payment.new(attributes[:dati_versamento]).perform!
+      PagoPA::SOAP::Message::Payment.new(attributes[:dati_versamento]).perform!
   end
 end

@@ -2,16 +2,16 @@
 
 require "spec_helper"
 
-RSpec.describe PagopaSoap do
+RSpec.describe PagoPA::SOAP do
   let(:base) do
-    File.expand_path("../../resources/pagopa_base.wsdl", __dir__)
+    File.expand_path("../../../resources/pagopa_base.wsdl", __dir__)
   end
   let(:notify) do
-    File.expand_path("../../resources/pagopa_avvisi.wsdl", __dir__)
+    File.expand_path("../../../resources/pagopa_avvisi.wsdl", __dir__)
   end
   let(:configuration) do
     {
-      namespace: "PagoPa",
+      namespace: "PagoPA",
       wsdl_base: base,
       wsdl_notify: notify,
       endpoint_base: nil,
@@ -20,7 +20,7 @@ RSpec.describe PagopaSoap do
   end
 
   it "has a version number" do
-    expect(PagopaSoap::VERSION).not_to be nil
+    expect(PagoPA::SOAP::VERSION).not_to be nil
   end
 
   it "has a default options" do

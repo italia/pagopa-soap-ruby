@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
-module PagopaSoap; end
+module PagoPA; end
+module PagoPA::SOAP; end
 
-class PagopaSoap::Base
+class PagoPA::SOAP::WSDLLoader
   attr_reader :wsdl_base
   attr_reader :wsdl_notify
   attr_reader :namespace
 
   def initialize(options = {})
-    @wsdl_base = options[:wsdl_base] || PagopaSoap.config.wsdl_base
-    @wsdl_notify = options[:wsdl_notify] || PagopaSoap.config.wsdl_notify
-    @namespace = options[:namespace] || PagopaSoap.config.namespace
+    @wsdl_base = options[:wsdl_base] || PagoPA::SOAP.config.wsdl_base
+    @wsdl_notify = options[:wsdl_notify] || PagoPA::SOAP.config.wsdl_notify
+    @namespace = options[:namespace] || PagoPA::SOAP.config.namespace
 
     validate_wsdl_base!
     validate_wsdl_notify!
@@ -40,7 +41,7 @@ class PagopaSoap::Base
       Soap::Base.new(
         wsdl: wsdl_base,
         namespace: namespace,
-        endpoint: PagopaSoap.config.endpoint_base
+        endpoint: PagoPA::SOAP.config.endpoint_base
       )
   end
 
@@ -49,7 +50,7 @@ class PagopaSoap::Base
       Soap::Base.new(
         wsdl: wsdl_notify,
         namespace: namespace,
-        endpoint: PagopaSoap.config.endpoint_notify
+        endpoint: PagoPA::SOAP.config.endpoint_notify
       )
   end
 

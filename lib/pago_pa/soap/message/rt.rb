@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::Rt
+class PagoPA::SOAP::Message::Rt
   class << self
     def decode(string)
       Base64.decode64(string)

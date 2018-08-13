@@ -8,12 +8,16 @@ RSpec.describe Soap::Webservice::Client do
       described_class.new
     end
 
-    it "has nil namespace" do
-      expect(described_class.namespace).to eq("")
+    it "has undefined method namespace" do
+      expect do
+        described_class.namespace
+      end.to raise_error(NoMethodError, /undefined method/)
     end
 
-    it "has nil action" do
-      expect(described_class.action).to eq("")
+    it "has undefined method action" do
+      expect do
+        described_class.action
+      end.to raise_error(NoMethodError, /undefined method/)
     end
   end
 end

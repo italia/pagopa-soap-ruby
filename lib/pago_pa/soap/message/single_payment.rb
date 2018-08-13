@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::SinglePayment
+class PagoPA::SOAP::Message::SinglePayment
   REQUIRED_ATTRIBUTES = %i[].freeze
 
   attr_reader :attributes

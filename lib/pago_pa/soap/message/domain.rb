@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::Domain
+class PagoPA::SOAP::Message::Domain
   REQUIRED_ATTRIBUTES = %i[
     identificativo_dominio identificativo_stazione_richiedente
   ].freeze

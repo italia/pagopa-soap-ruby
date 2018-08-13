@@ -7,22 +7,13 @@ module Soap::Webservice; end
 
 class Soap::Webservice::Client
   class << self
-    def namespace; ""; end
-
-    def action; ""; end
-
     def endpoint
       "#{namespace}#{action}"
     end
   end
 
-  attr_reader :request
-  attr_reader :client
-
-  def initialize(request)
-    @request = request
-
-    @client =
+  def client
+    @client ||=
       Savon.client(
         endpoint: self.class.endpoint,
         namespace: self.class.namespace,
@@ -30,14 +21,15 @@ class Soap::Webservice::Client
         pretty_print_xml: true,
         follow_redirects: true,
         headers: {
-          "User-Agent" => "Ruby Wrapper pagoPA (#{PagopaSoap::VERSION})",
+          "User-Agent" =>
+            "Ruby Wrapper for pagoPA (#{PagoPA::SOAP::VERSION})",
           "Cache-Control" => "no-cache",
           "Accept-Encoding" => "gzip, deflate"
         }
       )
   end
 
-  def send
+  def send(request)
     response.new(
       client.call(Soap.to_snakecase(self.class.action), request.to_message)
     )

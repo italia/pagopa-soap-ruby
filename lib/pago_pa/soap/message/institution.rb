@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::Institution
+class PagoPA::SOAP::Message::Institution
   REQUIRED_ATTRIBUTES = %i[
     denominazione_beneficiario identificativo_univoco_beneficiario
   ].freeze

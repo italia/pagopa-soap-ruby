@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
-require "pagopa_soap/message/single_payment"
+require "pago_pa/soap/message/single_payment"
 
-module PagopaSoap; end
-module PagopaSoap::Message; end
+module PagoPA; end
+module PagoPA::SOAP; end
+module PagoPA::SOAP::Message; end
 
-class PagopaSoap::Message::Payment
+class PagoPA::SOAP::Message::Payment
   REQUIRED_ATTRIBUTES = %i[
     data_esecuzione_pagamento importo_totale_da_versare tipo_versamento
     identificativo_univoco_versamento codice_contesto_pagamento
@@ -54,7 +55,7 @@ class PagopaSoap::Message::Payment
 
   def single_payments
     @single_payments ||= attributes[:dati_singolo_versamento].map do |single|
-      PagopaSoap::Message::SinglePayment.new(single).perform!
+      PagoPA::SOAP::Message::SinglePayment.new(single).perform!
     end
   end
 end

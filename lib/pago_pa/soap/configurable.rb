@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PagopaSoap
+module PagoPA::SOAP
   class << self
     # List of configurable keys for {Pagoparb::Client}
     # @return [Array] of option keys
@@ -28,11 +28,11 @@ module PagopaSoap
     attr_accessor :endpoint_notify
 
     def initialize
-      @namespace ||= "PagoPa"
+      @namespace ||= "PagoPA"
       @wsdl_base ||=
-        File.expand_path("../../resources/pagopa_base.wsdl", __dir__)
+        File.expand_path("../../../resources/pagopa_base.wsdl", __dir__)
       @wsdl_notify ||=
-        File.expand_path("../../resources/pagopa_avvisi.wsdl", __dir__)
+        File.expand_path("../../../resources/pagopa_avvisi.wsdl", __dir__)
     end
   end
 end
