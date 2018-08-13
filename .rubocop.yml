@@ -29,7 +29,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Exclude:
     - spec/**/*.rb
-    - pagopa_soap.gemspec
+    - pagopa-soap.gemspec
 
 Metrics/LineLength:
   Exclude:
