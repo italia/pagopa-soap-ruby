@@ -1,21 +1,21 @@
-# Pagoparb
+# PagoPA SOAP
 
 Ruby Wrapper for pagoPA SOAP API based on Savon
 
 | Project                | PagoPa Soap Ruby |
 | ---------------------- | ------------ |
-| Gem name               | pagopa_soap |
-| License                | [BSD 3](https://github.com/italia/pagoparb/blob/master/LICENSE) |
-| Continuous integration | [![Build Status](https://secure.travis-ci.org/italia/pagoparb.svg?branch=master)](https://travis-ci.org/italia/pagoparb) |
-| Test coverate          | [![Coverage Status](https://coveralls.io/repos/github/italia/pagoparb/badge.svg?branch=master)](https://coveralls.io/github/italia/pagoparb?branch=master) |
-| Credits                | [Contributors](https://github.com/italia/pagoparb/graphs/contributors) |
+| Gem name               | pagopa-soap |
+| License                | [BSD 3](https://github.com/italia/pagopa-soap-ruby/blob/master/LICENSE) |
+| Continuous integration | [![Build Status](https://secure.travis-ci.org/italia/pagopa-soap-ruby.svg?branch=master)](https://travis-ci.org/italia/pagopa-soap-ruby) |
+| Test coverate          | [![Coverage Status](https://coveralls.io/repos/github/italia/pagopa-soap-ruby/badge.svg?branch=master)](https://coveralls.io/github/italia/pagopa-soap-ruby?branch=master) |
+| Credits                | [Contributors](https://github.com/italia/pagopa-soap-ruby/graphs/contributors) |
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'pagopa_soap'
+gem 'pagopa-soap'
 ```
 
 And then execute:
@@ -24,7 +24,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install pagopa_soap
+    $ gem install pagopa-soap
 
 ## Usage
 
@@ -32,29 +32,28 @@ TODO: Write usage instructions here
 Initialize the wrapper and generate dynamic class:
 
 ```ruby
-base = PagopaSoap::Base.new
-base.build
+PagoPA::SOAP.build
 ```
 
 After this, the system generate new class in according with WSDL definitions
-with namespace PagoPa
+with namespace PagoPA
 
 ```ruby
-PagoPa::NodoChiediStatoRpt
-PagoPa::NodoChiediListaPendentiRpt
-PagoPa::NodoInviaRpt
-PagoPa::NodoInviaCarrelloRpt
-PagoPa::NodoChiediCopiaRt
-PagoPa::NodoChiediInformativaPsp
-PagoPa::NodoPaChiediInformativaPa
-PagoPa::NodoChiediElencoQuadraturePa
-PagoPa::NodoChiediQuadraturaPa
-PagoPa::NodoChiediElencoFlussiRendicontazione
-PagoPa::NodoChiediFlussoRendicontazione
-PagoPa::NodoInviaRichiestaStorno
-PagoPa::NodoInviaRispostaRevoca
-PagoPa::NodoChiediSceltaWisp
-PagoPa::NodoInviaAvvisoDigitale
+PagoPA::NodoChiediStatoRpt
+PagoPA::NodoChiediListaPendentiRpt
+PagoPA::NodoInviaRpt
+PagoPA::NodoInviaCarrelloRpt
+PagoPA::NodoChiediCopiaRt
+PagoPA::NodoChiediInformativaPsp
+PagoPA::NodoPaChiediInformativaPa
+PagoPA::NodoChiediElencoQuadraturePa
+PagoPA::NodoChiediQuadraturaPa
+PagoPA::NodoChiediElencoFlussiRendicontazione
+PagoPA::NodoChiediFlussoRendicontazione
+PagoPA::NodoInviaRichiestaStorno
+PagoPA::NodoInviaRispostaRevoca
+PagoPA::NodoChiediSceltaWisp
+PagoPA::NodoInviaAvvisoDigitale
 ```
 
 For pagoPA you can specify WSDL, endpoint and namespace in a configuration block
@@ -62,14 +61,25 @@ For pagoPA you can specify WSDL, endpoint and namespace in a configuration block
 ```ruby
 # config/initializers/pagopa_soap.rb
 # This is your pagoPA Wrapper setting.
-PagopaSoap::Configurable.configure do |config|
-  config.namespace = "PagoPa"
+PagoPA::SOAP::Configurable.configure do |config|
+  config.namespace = "PagoPA"
   config.wsdl_base = "WSDL with webservice specification"
   config.wsdl_notify = "WSDL with webservice for PUSH notification"
   config.endpoint_base = "https://host-nodo-spc/webservices/"
   config.endpoint_notify = "https://host-nodo-spc-push/webservices/"
 end
 ```
+
+## Features
+|:---|:---|
+|**List:**||
+|parsing of WSDL|✓|
+|generate SOAP class base|✓|
+|convert Base64 body message to HASH||
+|create nodoSPC testenv||
+|create nodoPSP testenv||
+|generate IUV code||
+
 
 ## License
 
