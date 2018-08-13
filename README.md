@@ -6,6 +6,7 @@ Ruby Wrapper for pagoPA SOAP API based on Savon
 | ---------------------- | ------------ |
 | Gem name               | pagopa-soap |
 | License                | [BSD 3](https://github.com/italia/pagopa-soap-ruby/blob/master/LICENSE) |
+| Version                | [![Gem Version](https://badge.fury.io/rb/pagopa-soap.svg)](https://badge.fury.io/rb/pagopa-soap) |
 | Continuous integration | [![Build Status](https://secure.travis-ci.org/italia/pagopa-soap-ruby.svg?branch=master)](https://travis-ci.org/italia/pagopa-soap-ruby) |
 | Test coverate          | [![Coverage Status](https://coveralls.io/repos/github/italia/pagopa-soap-ruby/badge.svg?branch=master)](https://coveralls.io/github/italia/pagopa-soap-ruby?branch=master) |
 | Credits                | [Contributors](https://github.com/italia/pagopa-soap-ruby/graphs/contributors) |
