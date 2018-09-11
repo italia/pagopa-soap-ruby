@@ -1,6 +1,6 @@
 # PagoPA SOAP
 
-Ruby Wrapper for pagoPA SOAP API based on Savon
+Ruby Wrapper per pagoPA SOAP API basato sulla gemma [Savon](https://github.com/savonrb/savon)
 
 | Project                | PagoPa Soap Ruby |
 | ---------------------- | ------------ |
@@ -8,36 +8,36 @@ Ruby Wrapper for pagoPA SOAP API based on Savon
 | License                | [BSD 3](https://github.com/italia/pagopa-soap-ruby/blob/master/LICENSE) |
 | Version                | [![Gem Version](https://badge.fury.io/rb/pagopa-soap.svg)](https://badge.fury.io/rb/pagopa-soap) |
 | Continuous integration | [![Build Status](https://secure.travis-ci.org/italia/pagopa-soap-ruby.svg?branch=master)](https://travis-ci.org/italia/pagopa-soap-ruby) |
-| Test coverate          | [![Coverage Status](https://coveralls.io/repos/github/italia/pagopa-soap-ruby/badge.svg?branch=master)](https://coveralls.io/github/italia/pagopa-soap-ruby?branch=master) |
+| Test coverage          | [![Coverage Status](https://coveralls.io/repos/github/italia/pagopa-soap-ruby/badge.svg?branch=master)](https://coveralls.io/github/italia/pagopa-soap-ruby?branch=master) |
 | Credits                | [Contributors](https://github.com/italia/pagopa-soap-ruby/graphs/contributors) |
 
-## Installation
+## Installazione
 
-Add this line to your application's Gemfile:
+All'interno del Gemfile del progetto inserire questa righa:
 
 ```ruby
 gem 'pagopa-soap'
 ```
 
-And then execute:
+Quindi eseguire il comando:
 
     $ bundle
 
-Or install it yourself as:
+In alternativa è possibile installare la gemma globalbmente lanciando il comando:
 
     $ gem install pagopa-soap
 
-## Usage
+## Utilizzo
 
 TODO: Write usage instructions here
-Initialize the wrapper and generate dynamic class:
+Inizializzare il wrapper e generare le classi dinamiche in base al WSDL:
 
 ```ruby
 PagoPA::SOAP.build
 ```
 
-After this, the system generate new class in according with WSDL definitions
-with namespace PagoPA
+Dopo aver lanciato la `build`, il sistema genera le nuove classi con il namespace PagoPA.
+Ecco la lista delle nuove classi disponibili:
 
 ```ruby
 PagoPA::NodoChiediStatoRpt
@@ -57,7 +57,8 @@ PagoPA::NodoChiediSceltaWisp
 PagoPA::NodoInviaAvvisoDigitale
 ```
 
-For pagoPA you can specify WSDL, endpoint and namespace in a configuration block
+Ogni classe comprende tre sottoclassi per poter costruire la `request`, inoltrarla al sistema tramite il `client` ed ottenere la `response` corrispondente.
+Per pagoPA è possibile specificare WSDL, endpoint e namespace in un blocco di configurazioni:
 
 ```ruby
 # config/initializers/pagopa_soap.rb
@@ -72,14 +73,20 @@ end
 ```
 
 ## Features
+|[PagoPA regulations](httphttps://www.agid.gov.it/sites/default/files/repository_files/specifiche_attuative_nodo_2_1_0.pdf)||
 |:---|:---|
 |**List:**||
-|parsing of WSDL|✓|
-|generate SOAP class base|✓|
-|convert Base64 body message to HASH||
-|create nodoSPC testenv||
-|create nodoPSP testenv||
-|generate IUV code||
+|Parsing del WSDL base|✓|
+|Generazione Wrapper SOAP base|✓|
+|Gestione IUV||
+|Conversione risposta da Base64 ad HASH||
+|Cancellation RT||
+|Avvisatura digitale||
+|Gestione giornale degli eventi||
+|Gestione FaultBean SOAP||
+|File Transfer Sicuro||
+|Creazione nodoSPC testenv||
+|Creazione nodoPSP testenv||
 
 
 ## License
